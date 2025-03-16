@@ -1,6 +1,8 @@
 import pytesseract
 from pytesseract import Output 
 
+from interfaces.orientationpredictor import OrientationPredictor
+
 class TesseractOrientationPredictor[OrientationPredictor]:
     
     def process(self, raw_img):

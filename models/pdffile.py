@@ -3,6 +3,7 @@ from models.page import Page
 from models.image import Image
 from interfaces.pdffileloader import PDFFileLoader
 from interfaces.orientationpredictor import OrientationPredictor
+from interfaces.skewpredictor import SkewPredictor
 
 class PDFFile:
     def __init__(self, pages):
@@ -13,6 +14,10 @@ class PDFFile:
     def predict_orientation(self, predictor: OrientationPredictor):
         for page in self.__pages:
             page.predict_orientation(predictor)
+
+    def predict_skew(self, predictor: SkewPredictor):
+        for page in self.__pages:
+            page.predict_skew(predictor)
 
     @classmethod
     def of(cls, filename: str, loader: PDFFileLoader):
