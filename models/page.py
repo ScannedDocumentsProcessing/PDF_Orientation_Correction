@@ -1,0 +1,14 @@
+from typing import List
+
+from models.image import Image
+from interfaces.orientationpredictor import OrientationPredictor
+
+class Page:
+    def __init__(self, page_number, rotation, images):
+        self.page_number: int = page_number
+        self.rotation: int = rotation
+        self.__images: List[Image] = images
+    
+    def predict_orientation(self, predictor: OrientationPredictor):
+        for img in self.__images:
+            img.predict_orientation(predictor)
