@@ -13,5 +13,10 @@ class Image:
         self.__rotate = result_prediction["rotate"]
 
     def predict_skew(self, predictor: SkewPredictor):
-        self.__skew_orientation = predictor.process(self.__raw_data)
-        print(self.__skew_orientation)
+        self.__skew_orientation = float(predictor.process(self.__raw_data))
+    
+    def get_predicted_orientation(self):
+        return self.__orientation
+    
+    def get_predicted_skew_orientation(self):
+        return self.__skew_orientation

@@ -4,6 +4,9 @@ import numpy as np
 from interfaces.skewpredictor import SkewPredictor
 
 class CV2SkewPredictor[SkewPredictor]:
+
+    def __init__(self, display_images=False):
+        self.display_images = display_images
     
     def image_with_lines(self, raw_img, lines):
         img = raw_img.copy()
@@ -32,6 +35,8 @@ class CV2SkewPredictor[SkewPredictor]:
         return img
     
     def display_image(self, raw_img):
+        if not self.display_images:
+            return
         cv2.imshow("Img", raw_img)
         cv2.waitKey(0)
         cv2.destroyAllWindows()
@@ -108,8 +113,6 @@ class CV2SkewPredictor[SkewPredictor]:
         angles = self.filter_vertical_angles(angles, 10)
 
         if np.size(angles) > 0:
-            md_angle = np.median(angles)
-            print("Median angle:", md_angle)
-            return md_angle
+            return np.median(angles)
         else:
             return 0 
