@@ -1,0 +1,10 @@
+stages:
+  evaluate:
+    cmd: python evaluate.py data
+    deps:
+    - evaluate.py
+    - data
+    metrics:
+    - evaluation/performance.json
+    plots:
+    - evaluation/orientation_confusion_matrix.png

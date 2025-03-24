@@ -1,0 +1,23 @@
+schema: '2.0'
+stages:
+  evaluate:
+    cmd: python evaluate.py data
+    deps:
+    - path: data
+      hash: md5
+      md5: 1fd151c65a62eaf5db773f2f248159be.dir
+      size: 2463141
+      nfiles: 8
+    - path: evaluate.py
+      hash: md5
+      md5: 580a105e38f7383f858382e80efa6ecc
+      size: 3334
+    outs:
+    - path: evaluation/orientation_confusion_matrix.png
+      hash: md5
+      md5: d52378334ec25ba8752f0c559023b905
+      size: 19812
+    - path: evaluation/performance.json
+      hash: md5
+      md5: a75b35d46210c0d3ffe100c58bcbc7cf
+      size: 515
