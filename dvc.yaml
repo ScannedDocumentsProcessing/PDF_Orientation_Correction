@@ -3,6 +3,8 @@ stages:
     cmd: python evaluate.py data
     deps:
     - evaluate.py
+    - predict.py
+    - services
     - data
     metrics:
     - evaluation/performance.json

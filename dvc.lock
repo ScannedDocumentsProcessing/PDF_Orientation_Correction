@@ -12,6 +12,15 @@ stages:
       hash: md5
       md5: 580a105e38f7383f858382e80efa6ecc
       size: 3334
+    - path: predict.py
+      hash: md5
+      md5: 72185bbb830cac0d7f458b798ec753e7
+      size: 1763
+    - path: services
+      hash: md5
+      md5: d5ea11e4c1e17b77d704252d9b51b5a5.dir
+      size: 15709
+      nfiles: 6
     outs:
     - path: evaluation/orientation_confusion_matrix.png
       hash: md5
