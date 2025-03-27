@@ -38,7 +38,7 @@ def main():
 
     if len(sys.argv) < 2 or len(sys.argv) > 5:
         print("Arguments error. Usage:\n")
-        print("\tpython3 main.py <pdf-file> [predict_orientation] [predict_skew] [display_images]\n")
+        print("\tpython3 predict.py <pdf-file> [predict_orientation] [predict_skew] [display_images]\n")
         sys.exit(1)
     filename = sys.argv[1]
     predict_orientation = utils.parse_boolean_arg(sys.argv, 2, True)

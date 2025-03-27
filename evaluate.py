@@ -83,7 +83,7 @@ def main():
     evaluation_folder.mkdir(exist_ok=True)
 
     orientation_labels = [0, 90, 180, 270]
-    cm = confusion_matrix(true_labels['orientation'], predictions['orientation'], labels=orientation_labels)
+    cm = confusion_matrix(all_true_labels['orientation'], all_predictions['orientation'], labels=orientation_labels)
     disp = ConfusionMatrixDisplay(cm, display_labels=orientation_labels)
     disp.plot().figure_.savefig(os.path.join(evaluation_folder, 'orientation_confusion_matrix.png'))
 

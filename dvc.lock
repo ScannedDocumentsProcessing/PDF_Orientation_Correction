@@ -10,22 +10,22 @@ stages:
       nfiles: 8
     - path: evaluate.py
       hash: md5
-      md5: 580a105e38f7383f858382e80efa6ecc
-      size: 3334
+      md5: d5f1a74e22ad761331dee971abb4c900
+      size: 3342
     - path: predict.py
       hash: md5
-      md5: 72185bbb830cac0d7f458b798ec753e7
-      size: 1763
+      md5: 455704cfdabb4cd11a8fc324122eb776
+      size: 1766
     - path: services
       hash: md5
-      md5: d5ea11e4c1e17b77d704252d9b51b5a5.dir
+      md5: be73445e5a9efacd7229002ecca80359.dir
       size: 15709
       nfiles: 6
     outs:
     - path: evaluation/orientation_confusion_matrix.png
       hash: md5
-      md5: d52378334ec25ba8752f0c559023b905
-      size: 19812
+      md5: cc55f2f67fa49d456ebed948f03304d5
+      size: 19921
     - path: evaluation/performance.json
       hash: md5
       md5: a75b35d46210c0d3ffe100c58bcbc7cf
