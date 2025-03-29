@@ -41,7 +41,7 @@ jobs:
           echo "# Experiment Report (${{ github.sha }})" >> report.md
 
           echo "## Metrics workflow" >> report.md
-          dvc metrics --md >> report.md
+          dvc metrics show --md >> report.md
 
           # Create plots
           echo "## Plots" >> report.md
