@@ -36,6 +36,8 @@ jobs:
         with:
           version: '0.20.6'
       - name: Create CML report
+        env:
+          REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           # Add title to the report
           echo "# Experiment Report (${{ github.sha }})" >> report.md
