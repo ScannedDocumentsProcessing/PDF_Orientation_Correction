@@ -10,19 +10,6 @@ from services.pdfplumberloader import PDFPlumberLoader
 from sklearn.metrics import mean_squared_error, confusion_matrix, classification_report, ConfusionMatrixDisplay
 
 
-def evaluate_performance(true_labels, predictions):
-    result = {}
-    section = 'orientation'
-    result[section] = {}
-    result[section]['classification_report'] = classification_report(true_labels[section], predictions[section], zero_division=np.nan, output_dict=True)
-
-    section = 'skew_orientation'
-    result[section] = {}
-    result[section]['mean_squared_error'] = mean_squared_error(true_labels[section], predictions[section])
-
-    return result
-
-
 def prepare_labels_and_predictions_dict(sections):
     result = {}
     for section in sections:
@@ -76,8 +63,6 @@ def main():
         append_to_dict(all_true_labels, true_labels)
         append_to_dict(all_predictions, predictions)
 
-    performance_report = evaluate_performance(all_predictions, all_true_labels)
-
     # Create folder and save performance report
     evaluation_folder = Path("evaluation")
     evaluation_folder.mkdir(exist_ok=True)
@@ -87,9 +72,19 @@ def main():
     disp = ConfusionMatrixDisplay(cm, display_labels=orientation_labels)
     disp.plot().figure_.savefig(os.path.join(evaluation_folder, 'orientation_confusion_matrix.png'))
 
-    with open(os.path.join(evaluation_folder, "performance.json"), "w") as file:
-        json.dump(performance_report, file)
-        print(f"Evaluation metrics files saved at {evaluation_folder.absolute()}")
+    section = 'orientation'
+    with open(os.path.join(evaluation_folder, f"performance_{section}.json"), "w") as file:
+        report = classification_report(all_true_labels[section], all_predictions[section], zero_division=np.nan, output_dict=True)
+        json.dump(report, file)
+    
+    section = 'skew_orientation'
+    with open(os.path.join(evaluation_folder, f"performance_{section}.json"), "w") as file:
+        report = {
+            'mean_squared_error': mean_squared_error(all_true_labels[section], all_predictions[section])
+        }
+        json.dump(report, file)
+    
+    print(f"Evaluation metrics files saved at {evaluation_folder.absolute()}")
 
 
 if __name__ == "__main__":

@@ -7,6 +7,7 @@ stages:
     - services
     - data
     metrics:
-    - evaluation/performance.json
+    - evaluation/performance_orientation.json
+    - evaluation/performance_skew_orientation.json
     plots:
     - evaluation/orientation_confusion_matrix.png

@@ -5,13 +5,13 @@ stages:
     deps:
     - path: data
       hash: md5
-      md5: 1fd151c65a62eaf5db773f2f248159be.dir
+      md5: f80cb8fd5e2247afe6ba9c475e5317b7.dir
       size: 2463141
-      nfiles: 8
+      nfiles: 4
     - path: evaluate.py
       hash: md5
-      md5: d5f1a74e22ad761331dee971abb4c900
-      size: 3342
+      md5: e7eb7133f0934111f123913843f34f20
+      size: 3255
     - path: predict.py
       hash: md5
       md5: 455704cfdabb4cd11a8fc324122eb776
@@ -26,7 +26,11 @@ stages:
       hash: md5
       md5: cc55f2f67fa49d456ebed948f03304d5
       size: 19921
-    - path: evaluation/performance.json
+    - path: evaluation/performance_orientation.json
       hash: md5
-      md5: a75b35d46210c0d3ffe100c58bcbc7cf
-      size: 515
+      md5: 973774a912f3a1a3a247e221d3d0f830
+      size: 405
+    - path: evaluation/performance_skew_orientation.json
+      hash: md5
+      md5: e9c2015bace383c9995cee4c543b92a6
+      size: 44

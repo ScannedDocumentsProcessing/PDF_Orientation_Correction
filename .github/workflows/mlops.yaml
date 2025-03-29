@@ -50,7 +50,7 @@ jobs:
 
           # Create confusion matrix
           echo "### Confusion Matrix" >> report.md
-          echo '![](./dvc_plots/static/workspace_evaluation_orientation_confusion_matrix.png "Confusion Matrix")' >> report.md
+          echo '![](./evaluation/orientation_confusion_matrix.png "Confusion Matrix")' >> report.md
 
           # Publish the CML report
           cml comment update --target=commit --publish report.md
