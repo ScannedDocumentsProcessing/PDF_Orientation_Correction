@@ -24,6 +24,8 @@ jobs:
         with:
           python-version: '3.12'
           cache: pip
+      - name: Install Tesseract
+        run: sudo apt install tesseract-ocr
       - name: Install dependencies
         run: pip install --requirement requirements-freeze.txt
       - name: Train model
