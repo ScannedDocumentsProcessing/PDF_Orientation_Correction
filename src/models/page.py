@@ -7,10 +7,12 @@ from interfaces.skewpredictor import SkewPredictor
 class Page:
     def __init__(self, page_number, rotation, images):
         self.page_number: int = page_number
-        print(self.page_number)
         self.rotation: int = rotation
-        print(self.rotation)
         self.__images: List[Image] = images
+    
+    @property
+    def images(self) -> List[Image]:
+        return self.__images
     
     def predict_orientation(self, predictor: OrientationPredictor):
         for img in self.__images:

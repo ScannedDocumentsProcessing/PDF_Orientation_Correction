@@ -6,6 +6,11 @@ class Image:
         self.__raw_data = raw_data
         self.__orientation = 0
         self.__skew_orientation = 0
+        self.__rotate = 0
+        
+    @property
+    def skew_angle(self) -> float:
+        return self.__skew_orientation
     
     def predict_orientation(self, predictor: OrientationPredictor):
         result_prediction = predictor.process(self.__raw_data)
@@ -14,4 +19,4 @@ class Image:
 
     def predict_skew(self, predictor: SkewPredictor):
         self.__skew_orientation = predictor.process(self.__raw_data)
-        print(self.__skew_orientation)
+        
