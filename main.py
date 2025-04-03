@@ -12,8 +12,8 @@ if __name__ == "__main__":
     filename = sys.argv[1]
     pdfLoader = PDFPlumberLoader()
     pdf = PDFFile.of(filename, pdfLoader)
-    #orientation_predictor = TesseractOrientationPredictor()
-    #pdf.predict_orientation(orientation_predictor)
+    # orientation_predictor = TesseractOrientationPredictor()
+    # pdf.predict_orientation(orientation_predictor)
     skew_predictor = CV2SkewPredictor()
     pdf.predict_skew(skew_predictor)
 
