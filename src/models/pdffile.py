@@ -23,11 +23,21 @@ class PDFFile:
         dict_pages = loader.process(pdf_data)  # Pass bytes to the loader
         pages = []
         for dpage in dict_pages:
-            images = []
-            for img in dpage['images']:
-                images.append(Image(img))
-            pages.append(Page(dpage['page_number'], dpage["rotation"], images))
+            img = Image(dpage['image'])
+            pages.append(Page(dpage['page_number'], dpage["rotation"], img))
         return PDFFile(pages)
+    
+    def get_pages_orientations(self):
+        pages_orientations = []
+        for page in self.__pages:
+            pages_orientations.append(page.get_predicted_orientation())
+        return pages_orientations
+    
+    def get_pages_skew_orientations(self):
+        pages_skew_orientations = []
+        for page in self.__pages:
+            pages_skew_orientations.append(page.get_predicted_skew_orientation())
+        return pages_skew_orientations
 
     def to_json(self):
         if not self.__pages:

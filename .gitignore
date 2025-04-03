@@ -172,3 +172,13 @@ cython_debug/
 
 # PyPI configuration file
 .pypirc
+
+# Evaluation data
+data/
+/data
+
+# Evaluation results
+evaluation/
+
+## DVC
+dvc_plots

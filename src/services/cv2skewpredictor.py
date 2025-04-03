@@ -2,7 +2,11 @@ import cv2
 import numpy as np
 from interfaces.skewpredictor import SkewPredictor
 
-class CV2SkewPredictor(SkewPredictor):
+
+class CV2SkewPredictor[SkewPredictor]:
+
+    def __init__(self, display_images=False):
+        self.display_images = display_images
     
     def image_with_lines(self, raw_img, lines):
         img = raw_img.copy()
@@ -26,6 +30,13 @@ class CV2SkewPredictor(SkewPredictor):
             for x1, y1, x2, y2 in lines[:, 0]:
                 cv2.line(img, (x1, y1), (x2, y2), (255, 0, 0), 2)
         return img
+    
+    def display_image(self, raw_img):
+        if not self.display_images:
+            return
+        cv2.imshow("Img", raw_img)
+        cv2.waitKey(0)
+        cv2.destroyAllWindows()
 
     def calculate_angles(self, lines):
         angles = []
@@ -88,7 +99,6 @@ class CV2SkewPredictor(SkewPredictor):
         angles = self.filter_vertical_angles(angles, 10)
 
         if np.size(angles) > 0:
-            md_angle = np.median(angles)
-            return md_angle
+            return np.median(angles)
         else:
             return 0 
