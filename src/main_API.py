@@ -22,12 +22,14 @@ from contextlib import asynccontextmanager
 from models.pdffile import PDFFile
 from services.pdfplumberloader import PDFPlumberLoader
 from services.cv2skewpredictor import CV2SkewPredictor
+from services.tesseractorientationpredictor import TesseractOrientationPredictor
+from services.pdf_corrector import PDFCorrector
 
 settings = get_settings()
 
 class MyService(Service):
     """
-    Gives the orientation of every page of a PDF
+    Corrects the orientation and skew of every page in a PDF
     """
 
     # Any additional fields must be excluded for Pydantic to work
@@ -52,7 +54,7 @@ class MyService(Service):
             ],
             data_out_fields=[
                 FieldDescription(
-                    name="result", type=[FieldDescriptionType.APPLICATION_JSON]
+                    name="corrected_pdf", type=[FieldDescriptionType.APPLICATION_PDF]
                 ),
             ],
             tags=[
@@ -76,23 +78,30 @@ class MyService(Service):
             self._logger.info("Loading PDF with PDFPlumberLoader")
             try:
                 pdf = PDFFile.of(raw_pdf, pdfLoader)
-            except pdfLoader.PDFSyntaxError as e:
-                self._logger.error(f"Invalid PDF file: {str(e)}")
-                raise ValueError("The uploaded file is not a valid PDF.")
             except Exception as e:
                 self._logger.error(f"Error loading PDF: {str(e)}")
-                raise
+                raise ValueError("The uploaded file is not a valid PDF or contains no images.")
+
+            # Predict the orientation using TesseractOrientationPredictor
+            self._logger.info("Predicting orientation with TesseractOrientationPredictor")
+            orientation_predictor = TesseractOrientationPredictor()
+            pdf.predict_orientation(orientation_predictor)
 
             # Predict the skew using CV2SkewPredictor
             self._logger.info("Predicting skew with CV2SkewPredictor")
             skew_predictor = CV2SkewPredictor()
             pdf.predict_skew(skew_predictor)
-            output = pdf.to_json()
-            self._logger.info("Successfully processed PDF and generated output")
 
-            # Return the result in the expected format
+            # Correct the PDF
+            self._logger.info("Correcting PDF orientation and skew")
+            pdf_corrector = PDFCorrector()
+            corrected_pdf = pdf.to_corrected_pdf(pdf_corrector)
+            
+            self._logger.info("Successfully processed and corrected PDF")
+
+            # Return the corrected PDF in the expected format
             return {
-                "result": TaskData(data=output, type=FieldDescriptionType.APPLICATION_JSON)
+                "corrected_pdf": TaskData(data=corrected_pdf.getvalue(), type=FieldDescriptionType.APPLICATION_PDF)
             }
 
         except KeyError as e:
@@ -152,9 +161,10 @@ async def lifespan(app: FastAPI):
     for engine_url in settings.engine_urls:
         await service_service.graceful_shutdown(my_service, engine_url)
 
-api_description = """The PDF Orientation Correction service detects the degree of orientation of the every page from the PDF.
+api_description = """The PDF Orientation Correction service detects and corrects the orientation and skew of every page in a PDF.
+It outputs a new PDF with all pages properly oriented (0 degrees) and deskewed.
 """
-api_summary = """Detects if a scanned document's orientation.
+api_summary = """Corrects the orientation and skew of scanned documents in a PDF.
 """
 
 # Define the FastAPI application with information
