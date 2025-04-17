@@ -1,9 +1,9 @@
 stages:
   evaluate:
-    cmd: python evaluate.py data
+    cmd: python src/evaluate.py data
     deps:
-    - evaluate.py
-    - predict.py
+    - src/evaluate.py
+    - src/predict.py
     - services
     - data
     metrics:

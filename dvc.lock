@@ -1,26 +1,26 @@
 schema: '2.0'
 stages:
   evaluate:
-    cmd: python evaluate.py data
+    cmd: python src/evaluate.py data
     deps:
     - path: data
       hash: md5
       md5: f80cb8fd5e2247afe6ba9c475e5317b7.dir
       size: 2463141
       nfiles: 4
-    - path: evaluate.py
+    - path: services
+      hash: md5
+      md5: a32333ec0a63b91763bfe279a7be89e8.dir
+      size: 10208
+      nfiles: 3
+    - path: src/evaluate.py
       hash: md5
       md5: e7eb7133f0934111f123913843f34f20
       size: 3255
-    - path: predict.py
+    - path: src/predict.py
       hash: md5
       md5: 455704cfdabb4cd11a8fc324122eb776
       size: 1766
-    - path: services
-      hash: md5
-      md5: be73445e5a9efacd7229002ecca80359.dir
-      size: 15709
-      nfiles: 6
     outs:
     - path: evaluation/orientation_confusion_matrix.png
       hash: md5
