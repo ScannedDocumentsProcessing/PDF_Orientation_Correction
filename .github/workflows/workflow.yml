@@ -52,7 +52,7 @@ on:
   push:
     branches:
       - main
-      - prod
+      # - prod
       - API_REST #test_purposes
 
   pull_request:
