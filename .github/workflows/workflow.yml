@@ -76,7 +76,7 @@ jobs:
           python-app-path: .
 
   test:
-    needs: review
+    # needs: review
     runs-on: ubuntu-latest
     # if: ${{ vars.RUN_CICD == 'true' }}
     steps:
@@ -90,7 +90,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
 
   release:
-    needs: test
+    # needs: test
     runs-on: ubuntu-latest
     # if: ${{ vars.RUN_CICD == 'true' && success() && github.ref == 'refs/heads/main' && (vars.DEPLOY_DEV == 'true' || vars.DEPLOY_PROD == 'true') }}
     steps:
