@@ -63,8 +63,10 @@ on:
 jobs:
   review:
     runs-on: ubuntu-latest
-    if: ${{ vars.RUN_CICD == 'true' }}
+  
     steps:
+      - name: Debug RUN_CICD variable
+        run: echo "RUN_CICD is set to ${{ env.RUN_CICD }}"
       - name: Clone repository
         uses: actions/checkout@v4
 
