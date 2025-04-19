@@ -63,7 +63,7 @@ on:
 jobs:
   review:
     runs-on: ubuntu-latest
-    if: ${{ vars.RUN_CICD == 'true' }}
+    # if: ${{ vars.RUN_CICD == 'true' }}
     steps:
       - name: Debug RUN_CICD variable
         run: echo "RUN_CICD is set to ${{ env.RUN_CICD }}"
@@ -78,7 +78,7 @@ jobs:
   test:
     needs: review
     runs-on: ubuntu-latest
-    if: ${{ vars.RUN_CICD == 'true' }}
+    # if: ${{ vars.RUN_CICD == 'true' }}
     steps:
       - name: Clone repository
         uses: actions/checkout@v4
@@ -92,7 +92,7 @@ jobs:
   release:
     needs: test
     runs-on: ubuntu-latest
-    if: ${{ vars.RUN_CICD == 'true' && success() && github.ref == 'refs/heads/main' && (vars.DEPLOY_DEV == 'true' || vars.DEPLOY_PROD == 'true') }}
+    # if: ${{ vars.RUN_CICD == 'true' && success() && github.ref == 'refs/heads/main' && (vars.DEPLOY_DEV == 'true' || vars.DEPLOY_PROD == 'true') }}
     steps:
       - name: Clone repository
         uses: actions/checkout@v4
