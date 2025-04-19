@@ -1,7 +1,8 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: my-service-ingress
+  name: pdf-orientation-correction-service-ingress
+  namespace: or-corr
   annotations:
     cert-manager.io/issuer: "letsencrypt"
     nginx.ingress.kubernetes.io/proxy-body-size: "16m"
@@ -9,17 +10,17 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-    - host: my-service.example.com
+    - host: my-orientation-correction.example.com
       http:
         paths:
           - path: /
             pathType: Prefix
             backend:
               service:
-                name: my-service-service
+                name: pdf-orientation-correction-service 
                 port:
                   number: 80
   tls:
     - hosts:
-        - my-service.example.com
-      secretName: my-service-example-com-tls-cert
+        - my-orientation-correction.example.com 
+      secretName: pdf-orientation-correction-service-tls-cert

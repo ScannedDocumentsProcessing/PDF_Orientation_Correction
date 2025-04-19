@@ -1,14 +1,15 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: my-service-config
+  name: pdf-orientation-correction-service-config
+  namespace: or-corr  
   labels:
-    app: my-service
+    app: pdf-orientation-correction-service
 data:
   ENVIRONMENT: development
   LOG_LEVEL: debug
-  ENGINE_URLS: '["http://core-engine-service:8080"]'
-  SERVICE_URL: http://my-service-service:9090
+  ENGINE_URLS: '["http://core-engine-service:8080"]' 
+  SERVICE_URL: http://pdf-orientation-correction-service:80
   MAX_TASKS: '50'
   ENGINE_ANNOUNCE_RETRIES: '5'
   ENGINE_ANNOUNCE_RETRY_DELAY: '3'
