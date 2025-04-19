@@ -53,6 +53,7 @@ on:
     branches:
       - main
       - prod
+      - API_REST #test_purposes
 
   pull_request:
 
@@ -108,7 +109,8 @@ jobs:
   deploy-dev:
     needs: release
     runs-on: ubuntu-latest
-    if: ${{ vars.RUN_CICD == 'true' && success() && github.ref == 'refs/heads/main' && vars.DEPLOY_DEV == 'true' }}
+    # if: ${{ vars.RUN_CICD == 'true' && success() && github.ref == 'refs/heads/main' && vars.DEPLOY_DEV == 'true' }}
+    if: ${{ vars.RUN_CICD == 'true' && success() && github.ref == 'refs/heads/API_REST' && vars.DEPLOY_DEV == 'true' }}
     steps:
       - name: Clone repository
         uses: actions/checkout@v4
