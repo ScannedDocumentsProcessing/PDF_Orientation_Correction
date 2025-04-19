@@ -48,17 +48,16 @@ concurrency:
   group: github_workflow
   cancel-in-progress: true
 
-on:
-  push:
-    branches:
-      - main
-      - prod
-      - API_REST #test_purposes
+on: push
+    # branches:
+    #   - main
+    #   - prod
+    #   - API_REST #test_purposes
 
-  pull_request:
+  # pull_request:
 
-  # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch:
+  # # Allows you to run this workflow manually from the Actions tab
+  # workflow_dispatch:
 
 jobs:
   review:
