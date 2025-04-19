@@ -96,7 +96,8 @@ jobs:
     steps:
       - name: Clone repository
         uses: actions/checkout@v4
-
+      - name: Log in to GHCR
+        run: echo "${{ secrets.GHCR_PAT }}" | docker login ghcr.io -u ramisetti1 --password-stdin
       - name: Build and push Docker image to GitHub
         id: build-and-push-docker-image-to-github
         uses: swiss-ai-center/common-code/.github/actions/build-and-push-docker-image-to-github@main
