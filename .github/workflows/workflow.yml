@@ -113,7 +113,7 @@ jobs:
     needs: release
     runs-on: ubuntu-latest
     
-    if: ${{ vars.RUN_CICD == 'true' && success() && github.ref == 'refs/heads/API_REST' && vars.DEPLOY_DEV == 'true' }}
+    
     steps:
       - name: Clone repository
         uses: actions/checkout@v4
