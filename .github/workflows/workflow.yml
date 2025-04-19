@@ -63,7 +63,8 @@ on:
 jobs:
   review:
     runs-on: ubuntu-latest
-  
+    env:
+      RUN_CICD: 'true'
     steps:
       - name: Debug RUN_CICD variable
         run: echo "RUN_CICD is set to ${{ env.RUN_CICD }}"
