@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
         - name: pdf-orientation-correction-service
-          image: ghcr.io/ramisetti1/pdf-orientation-correction:orr-corr-test  # Docker image from GHCR
+          image: ghcr.io/scanneddocumentsprocessing/pdf_orientation_correction:sha-6c53920  # Docker image from GHCR
           imagePullPolicy: Always
           ports:
             - containerPort: 80 
