@@ -122,19 +122,37 @@ jobs:
           docker_image_sha_tag="${docker_image_tags[1]}"
           echo "SERVICE_DOCKER_IMAGE_SHA_TAG=$docker_image_sha_tag" >> "$GITHUB_ENV"
 
-      - name: Prepare configuration files
-        uses: swiss-ai-center/common-code/.github/actions/prepare-kubernetes-configuration-files@main
-        with:
-          service-name: ${{ env.SERVICE_NAME }}
-          service-url: ${{ env.DEV_SERVICE_URL }}
-          service-docker-image-tag: ${{ env.SERVICE_DOCKER_IMAGE_SHA_TAG }}
-          configuration-files-location: ./kubernetes
-          environment: development
-          log-level: ${{ env.DEV_LOG_LEVEL }}
-          engine-urls: ${{ env.DEV_CORE_ENGINE_URLS }}
-          max-tasks: ${{ env.DEV_MAX_TASKS }}
-          engine-announce-retries: ${{ env.DEV_ENGINE_ANNOUNCE_RETRIES }}
-          engine-announce-retry-delay: ${{ env.DEV_ENGINE_ANNOUNCE_RETRY_DELAY }}
+      # - name: Prepare configuration files
+      #   uses: swiss-ai-center/common-code/.github/actions/prepare-kubernetes-configuration-files@main
+      #   with:
+      #     service-name: ${{ env.SERVICE_NAME }}
+      #     service-url: ${{ env.DEV_SERVICE_URL }}
+      #     service-docker-image-tag: ${{ env.SERVICE_DOCKER_IMAGE_SHA_TAG }}
+      #     configuration-files-location: ./kubernetes
+      #     environment: development
+      #     log-level: ${{ env.DEV_LOG_LEVEL }}
+      #     engine-urls: ${{ env.DEV_CORE_ENGINE_URLS }}
+      #     max-tasks: ${{ env.DEV_MAX_TASKS }}
+      #     engine-announce-retries: ${{ env.DEV_ENGINE_ANNOUNCE_RETRIES }}
+      #     engine-announce-retry-delay: ${{ env.DEV_ENGINE_ANNOUNCE_RETRY_DELAY }}
+
+      - name: Set up Kubeconfig
+        run: |
+          mkdir -p ~/.kube
+          echo "${{ env.DEV_KUBE_CONFIG }}" | base64 --decode > ~/.kube/config
+      
+      - name: Deploy service on the Kubernetes cluster and print output
+        shell: bash
+        working-directory: ./kubernetes
+        run: |
+          echo "Applying Kubernetes manifests..."
+          output=$(kubectl --namespace "${{ env.DEV_NAMESPACE }}" apply \
+            -f config-map.yml \
+            -f stateful.yml \
+            -f service.yml \
+            -f ingress.yml 2>&1)
+          echo "$output"
+
 
       - name: Remove unnecessary keys from configuration files
         uses: swiss-ai-center/common-code/.github/actions/remove-unnecessary-keys-from-kubernetes-configuration-files@main
