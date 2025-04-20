@@ -26,3 +26,5 @@ spec:
         envFrom:
           - configMapRef:
               name: my-service-config
+      imagePullSecrets:
+        - name: ghcr-secret
