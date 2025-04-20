@@ -25,3 +25,5 @@ spec:
           envFrom:
             - configMapRef:
                 name: pdf-orientation-correction-service-config
+      imagePullSecrets:
+        - name: ghcr-secret
