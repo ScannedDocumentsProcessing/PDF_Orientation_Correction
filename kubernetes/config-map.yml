@@ -8,8 +8,8 @@ metadata:
 data:
   ENVIRONMENT: development
   LOG_LEVEL: debug
-  ENGINE_URLS: '["http://core-engine-service:8080"]' 
-  SERVICE_URL: http://pdf-orientation-correction-service:80
+  ENGINE_URLS: '["https://backend-core-engine-swiss-ai-center.kube-ext.isc.heia-fr.ch"]' 
+  SERVICE_URL: https://pdf-orientation-correction-swiss-ai-center.kube-ext.isc.heia-fr.ch
   MAX_TASKS: '50'
   ENGINE_ANNOUNCE_RETRIES: '5'
   ENGINE_ANNOUNCE_RETRY_DELAY: '3'

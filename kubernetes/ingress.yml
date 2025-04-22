@@ -10,17 +10,17 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-    - host: my-orientation-correction.example.com
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: pdf-orientation-correction-service 
-                port:
-                  number: 80
+  - host: pdf-orientation-correction-swiss-ai-center.kube-ext.isc.heia-fr.ch
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: pdf-orientation-correction-service
+            port:
+              number: 80
   tls:
-    - hosts:
-        - my-orientation-correction.example.com 
-      secretName: pdf-orientation-correction-service-tls-cert
+  - hosts:
+    - pdf-orientation-correction-swiss-ai-center.kube-ext.isc.heia-fr.ch
+    secretName: pdf-orientation-correction-service-tls-cert
