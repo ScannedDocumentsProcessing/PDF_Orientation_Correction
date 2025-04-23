@@ -5,6 +5,10 @@ FROM python:3.11
 # TODO: 1. Add any additional packages required to run your model
 # RUN apt-get update && apt-get install ffmpeg libsm6 libxext6  -y
 # RUN pip3 install opencv-python-headless==4.11.0.86
+RUN apt update && \
+    apt install -y tesseract-ocr libtesseract-dev && \
+    apt clean && \
+    rm -rf /var/lib/apt/lists/*
 
 # Work directory
 WORKDIR /app
