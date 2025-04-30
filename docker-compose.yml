@@ -13,7 +13,7 @@ services:
           python3.11 -m venv .venv;
         fi &&
         # Activate the virtual environment
-        source .venv/Scripts/activate &&
+        source .venv/bin/activate &&
         # Install the dependencies
         pip install -r requirements.txt -r requirements-all.txt &&
         # Run the service
