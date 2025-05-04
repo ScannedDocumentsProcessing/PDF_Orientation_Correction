@@ -27,6 +27,7 @@ from services.pdf_corrector import PDFCorrector
 
 settings = get_settings()
 
+
 class MyService(Service):
     """
     Corrects the orientation and skew of every page in a PDF
@@ -96,7 +97,7 @@ class MyService(Service):
             self._logger.info("Correcting PDF orientation and skew")
             pdf_corrector = PDFCorrector()
             corrected_pdf = pdf.to_corrected_pdf(pdf_corrector)
-            
+
             self._logger.info("Successfully processed and corrected PDF")
 
             # Return the corrected PDF in the expected format
@@ -117,7 +118,9 @@ class MyService(Service):
             self._logger.error(f"Error processing PDF: {str(e)}")
             raise
 
+
 service_service: ServiceService | None = None
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -161,7 +164,8 @@ async def lifespan(app: FastAPI):
     for engine_url in settings.engine_urls:
         await service_service.graceful_shutdown(my_service, engine_url)
 
-api_description = """The PDF Orientation Correction service detects and corrects the orientation and skew of every page in a PDF.
+api_description = """The PDF Orientation Correction service detects and corrects the orientation and skew
+of every page in a PDF.
 It outputs a new PDF with all pages properly oriented (0 degrees) and deskewed.
 """
 api_summary = """Corrects the orientation and skew of scanned documents in a PDF.
@@ -201,6 +205,8 @@ app.add_middleware(
 )
 
 # Redirect to docs
+
+
 @app.get("/", include_in_schema=False)
 async def root():
     return RedirectResponse("/docs", status_code=301)

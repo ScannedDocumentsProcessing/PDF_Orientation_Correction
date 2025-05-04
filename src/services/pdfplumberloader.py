@@ -4,6 +4,7 @@ import numpy as np
 from io import BytesIO
 from interfaces.pdffileloader import PDFFileLoader
 
+
 class PDFPlumberLoader(PDFFileLoader):
 
     def process(self, pdf_data: bytes):

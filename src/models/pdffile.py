@@ -7,10 +7,11 @@ from interfaces.skewpredictor import SkewPredictor
 import json
 from io import BytesIO
 
+
 class PDFFile:
     def __init__(self, pages):
         self.__pages: List[Page] = pages
-    
+
     def predict_orientation(self, predictor: OrientationPredictor):
         for page in self.__pages:
             page.predict_orientation(predictor)
@@ -42,21 +43,19 @@ class PDFFile:
             }
             result.append(page_data)
         return json.dumps(result)
-    
+
     def to_corrected_pdf(self, corrector):
         """
         Creates a new PDF with corrected orientation and skew
-        
         Args:
             corrector: PDFCorrector instance
-            
         Returns:
             BytesIO object containing the corrected PDF
         """
         output_pdf = BytesIO()
         corrector.correct_pdf(self, output_pdf)
         return output_pdf
-    
+
     @property
     def pages(self):
         return self.__pages
