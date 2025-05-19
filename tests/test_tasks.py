@@ -1,86 +1,129 @@
-import pytest
+import time
+from main import app
+from storage.service import StorageService
+from logger.logger import get_logger
+from config import get_settings
+from pytest_httpserver import HTTPServer
 from fastapi.testclient import TestClient
-import pdfplumber
-from io import BytesIO
-import cv2
-import numpy as np
-from services.cv2skewpredictor import CV2SkewPredictor
-
-# Fixture to load the test PDF from the fixtures directory
+import pytest
+# TODO: Fix this test
 
 
-@pytest.fixture(name="test_pdf")
-def test_pdf_fixture():
-    """Load a test PDF with skewed images from the fixtures directory."""
-    pdf_path = "tests/fixtures/test_skewed.pdf"
-    try:
-        with open(pdf_path, "rb") as f:
-            return BytesIO(f.read())
-    except FileNotFoundError:
-        pytest.fail(f"Test PDF not found at {pdf_path}. Please add test_skewed.pdf to tests/fixtures/.")
+@pytest.fixture(name="storage")
+def storage_fixture():
+    settings = get_settings()
+    logger = get_logger(settings)
 
-# Fixture for the FastAPI test client
+    storage = StorageService(logger=logger)
+
+    yield storage
 
 
 @pytest.fixture(name="client")
-def client_fixture():
-    from main import app
+def client_fixture(reachable_engine_instance: HTTPServer):
+    def get_settings_override():
+        settings = get_settings()
+        settings.engine_urls = reachable_engine_instance.url_for("")
+        settings.engine_announce_retries = 2
+        settings.engine_announce_retry_delay = 1
+        settings.max_tasks = 2
+
+        return settings
+
+    app.dependency_overrides[get_settings] = get_settings_override
+
+    # client = TestClient(app)
+    # yield client
+
     with TestClient(app) as client:
+        # We wait for the app to announce itself to the engine (ugly)
+        time.sleep(5)
         yield client
 
-
-def test_process_valid_pdf(client: TestClient, test_pdf: BytesIO):
-    """Test processing a valid PDF with skewed images."""
-    # Send the PDF to the /compute endpoint
-    response = client.post("/compute", files={"pdf": ("test.pdf", test_pdf.getvalue(), "application/pdf")})
-    assert response.status_code == 200
-    assert response.headers["content-type"] == "application/pdf"
-
-    # Use CV2SkewPredictor to check the orientation of images in the corrected PDF
-    skew_predictor = CV2SkewPredictor()
-    corrected_pdf = BytesIO(response.content)
-    with pdfplumber.open(corrected_pdf) as pdf:
-        for page_num, page in enumerate(pdf.pages):
-            images = page.images  # Extract images from the page
-            if not images:
-                pytest.fail(f"No images found on page {page_num + 1} of corrected PDF")
-
-            for img_idx, img in enumerate(images):
-                # Extract raw image data and convert to OpenCV format
-                img_bytes = img["stream"].get_data()  # Get raw image bytes
-                img_array = np.frombuffer(img_bytes, np.uint8)
-                img_cv = cv2.imdecode(img_array, cv2.IMREAD_COLOR)
-
-                if img_cv is None:
-                    pytest.fail(f"Failed to decode image {img_idx + 1} on page {page_num + 1}")
-
-                # Predict the skew angle of the corrected image
-                skew_angle = skew_predictor.process(img_cv)
-
-                # Verify that the skew angle is approximately 0 (within tolerance)
-                tolerance = 0.5  # Allow ±0.5 degrees
-                assert abs(skew_angle) <= tolerance, (
-                    f"Image {img_idx + 1} on page {page_num + 1} is not corrected: "
-                    f"skew angle is {skew_angle}, expected ~0 (tolerance ±{tolerance})"
-                )
+    app.dependency_overrides.clear()
 
 
-def test_process_invalid_pdf(client: TestClient):
-    """Test processing an invalid PDF (non-PDF file)."""
-    invalid_file = BytesIO(b"not a pdf")
-    response = client.post("/compute", files={"pdf": ("invalid.txt", invalid_file.getvalue(), "text/plain")})
-    assert response.status_code == 422
-    assert "Invalid request" in response.text
+@pytest.fixture(name="reachable_engine_instance")
+def reachable_engine_instance_fixture(httpserver: HTTPServer):
+    httpserver.expect_request("/services").respond_with_json({}, status=200)
+
+    yield httpserver
+
+    httpserver.clear()
 
 
-def test_process_pdf_with_multiple_images(client: TestClient, test_pdf: BytesIO):
-    """Test processing a PDF with multiple images per page."""
-    response = client.post("/compute", files={"pdf": ("test.pdf", test_pdf.getvalue(), "application/pdf")})
-    assert response.status_code == 200
-    assert response.headers["content-type"] == "application/pdf"
-    corrected_pdf = BytesIO(response.content)
-    with pdfplumber.open(corrected_pdf) as pdf:
-        for page_num, page in enumerate(pdf.pages):
-            images = page.images
-            assert len(images) > 0, f"No images found on page {page_num + 1}"
-            # Verify that all images are processed (orientation check already done in test_process_valid_pdf)
+service_task = {
+    "s3_access_key_id": "minio",
+    "s3_secret_access_key": "minio123",
+    "s3_region": "eu-central-2",
+    "s3_host": " http://minio-swiss-ai-center.kube.isc.heia-fr.ch/",
+    "s3_bucket": "engine",
+    "task": {
+        "data_in": [],
+        "service_id": "0b59267-3ac8-4af9-b226-2c2a6c32c9c0",
+        "pipeline_id": "00000000-0000-0000-0000-000000000000",
+        "id": "41f694a7-eeea-427e-bb4f-0fdb312a7300"
+    }
+}
+
+
+@pytest.mark.asyncio
+async def test_task_status(client: TestClient, storage: StorageService):
+    service_task_copy = service_task.copy()
+
+    with open("tests/fixtures/test_skewed.pdf", "rb") as file:
+        file_key = await storage.upload(
+            file,
+            ".pdf",
+            service_task_copy["s3_region"],
+            service_task_copy["s3_secret_access_key"],
+            service_task_copy["s3_access_key_id"],
+            service_task_copy["s3_host"],
+            service_task_copy["s3_bucket"],
+        )
+
+        service_task_copy["task"]["data_in"] = [file_key]
+
+        compute_response = client.post("/compute", json=service_task_copy)
+        assert compute_response.status_code == 200
+
+        task_status_response = client.get(f"/status/{service_task_copy['task']['id']}")
+
+        found_at_least_once = False
+        number_of_tries = 0
+        while task_status_response.status_code == 200 and number_of_tries < 5:
+            found_at_least_once = True
+            number_of_tries += 1
+            task_status_response = client.get(f"/status/{service_task_copy['task']['id']}")
+
+        assert found_at_least_once and number_of_tries != 5
+
+
+def test_task_status_not_found(client: TestClient):
+    task_status_response = client.get("/status/00000000-0000-0000-0000-000000000000")
+
+    assert task_status_response.status_code == 404
+
+
+@pytest.mark.asyncio
+async def test_compute_queue_full(client: TestClient, storage: StorageService):
+    service_task_copy = service_task.copy()
+
+    with open("tests/fixtures/test_skewed.pdf", "rb") as file:
+        file_key = await storage.upload(
+            file,
+            ".pdf",
+            service_task_copy["s3_region"],
+            service_task_copy["s3_secret_access_key"],
+            service_task_copy["s3_access_key_id"],
+            service_task_copy["s3_host"],
+            service_task_copy["s3_bucket"],
+        )
+
+        service_task_copy["task"]["data_in"] = [file_key]
+
+        compute_response = client.post("/compute", json=service_task_copy)
+        compute_response = client.post("/compute", json=service_task_copy)
+        compute_response = client.post("/compute", json=service_task_copy)
+
+        assert compute_response.status_code == 503
