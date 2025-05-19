@@ -38,6 +38,7 @@ def test_process_valid_pdf(client: TestClient, test_pdf: BytesIO):
 
     # Use CV2SkewPredictor to check the orientation of images in the corrected PDF
     skew_predictor = CV2SkewPredictor()
+    corrected_pdf = BytesIO(response.content)
     with pdfplumber.open(corrected_pdf) as pdf:
         for page_num, page in enumerate(pdf.pages):
             images = page.images  # Extract images from the page
