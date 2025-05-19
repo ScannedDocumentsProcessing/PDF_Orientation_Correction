@@ -53,10 +53,10 @@ def reachable_engine_instance_fixture(httpserver: HTTPServer):
 
 
 service_task = {
-    "s3_access_key_id": "minio",
-    "s3_secret_access_key": "minio123",
+    "s3_access_key_id": "apetrucci",
+    "s3_secret_access_key": "PitaiPaicaa0",
     "s3_region": "eu-central-2",
-    "s3_host": " http://minio-swiss-ai-center.kube.isc.heia-fr.ch/",
+    "s3_host": "https://minio1.isc.heia-fr.ch:9015",
     "s3_bucket": "engine",
     "task": {
         "data_in": [],
