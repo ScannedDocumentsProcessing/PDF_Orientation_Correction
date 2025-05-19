@@ -69,7 +69,7 @@ def test_process_invalid_pdf(client: TestClient):
     """Test processing an invalid PDF (non-PDF file)."""
     invalid_file = BytesIO(b"not a pdf")
     response = client.post("/compute", files={"pdf": ("invalid.txt", invalid_file.getvalue(), "text/plain")})
-    assert response.status_code == 400
+    assert response.status_code == 422
     assert "Invalid request" in response.text
 
 
