@@ -3,7 +3,9 @@ import numpy as np
 from io import BytesIO
 from PyPDF2 import PdfReader, PdfWriter
 from PIL import Image as PILImage
-
+from reportlab.pdfgen import canvas
+from reportlab.lib.pagesizes import A4
+from reportlab.lib.utils import ImageReader
 
 class PDFCorrector:
     """
@@ -89,23 +91,34 @@ class PDFCorrector:
 
         return img
 
-    def _image_to_pdf(self, img):
-        """
-        Converts an OpenCV image to a PDF file
-        Args:
-            img: OpenCV image
-        Returns:
-            PDF file as bytes
-        """
-        # Convert from BGR to RGB
+    def _image_to_pdf(self, img, page_size=A4):
         if len(img.shape) == 3 and img.shape[2] == 3:
             img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-
-        # Convert to PIL Image
         pil_img = PILImage.fromarray(img)
 
-        # Save as PDF
-        pdf_bytes = BytesIO()
-        pil_img.save(pdf_bytes, format='PDF')
+        img_bytes = BytesIO()
+        pil_img.save(img_bytes, format='JPEG')
+        img_bytes.seek(0)
 
-        return pdf_bytes.getvalue()
+        pdf_buffer = BytesIO()
+        c = canvas.Canvas(pdf_buffer, pagesize=page_size)
+        page_width, page_height = page_size
+
+        img_width, img_height = pil_img.size
+        aspect = img_height / img_width
+
+        draw_width = page_width
+        draw_height = draw_width * aspect
+        if draw_height > page_height:
+            draw_height = page_height
+            draw_width = draw_height / aspect
+
+        x = (page_width - draw_width) / 2
+        y = (page_height - draw_height) / 2
+
+        image_reader = ImageReader(img_bytes)
+        c.drawImage(image_reader, x, y, width=draw_width, height=draw_height)
+        c.showPage()
+        c.save()
+
+        return pdf_buffer.getvalue()

@@ -78,7 +78,7 @@ class MyService(Service):
             pdfLoader = PDFPlumberLoader()
             self._logger.info("Loading PDF with PDFPlumberLoader")
             try:
-                pdf = PDFFile.of(raw_pdf, pdfLoader)
+                pdf = PDFFile.ofBytes(raw_pdf, pdfLoader)
             except Exception as e:
                 self._logger.error(f"Error loading PDF: {str(e)}")
                 raise ValueError("The uploaded file is not a valid PDF or contains no images.")

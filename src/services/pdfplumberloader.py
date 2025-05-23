@@ -7,9 +7,9 @@ from interfaces.pdffileloader import PDFFileLoader
 
 class PDFPlumberLoader(PDFFileLoader):
 
-    def process(self, pdf_data: bytes):
+    def process(self, filename):
         pages = []
-        with pdfplumber.open(BytesIO(pdf_data)) as pdf:
+        with pdfplumber.open(filename) as pdf:
             for page in pdf.pages:
                 if len(page.images) > 0:
                     images = []
@@ -30,3 +30,7 @@ class PDFPlumberLoader(PDFFileLoader):
         if not pages:
             raise ValueError("The PDF file does not contain any valid images.")
         return pages
+
+    def processBytes(self, pdf_data: bytes):
+        return self.process(BytesIO(pdf_data))
+        

@@ -30,6 +30,17 @@ class PDFFile:
                 images.append(Image(img))
             pages.append(Page(dpage['page_number'], dpage["rotation"], images))
         return PDFFile(pages)
+    
+    @classmethod
+    def ofBytes(cls, pdf_data: bytes, loader: PDFFileLoader):
+        dict_pages = loader.processBytes(pdf_data)  # Pass bytes to the loader
+        pages = []
+        for dpage in dict_pages:
+            images = []
+            for img in dpage['images']:
+                images.append(Image(img))
+            pages.append(Page(dpage['page_number'], dpage["rotation"], images))
+        return PDFFile(pages)
 
     def to_json(self):
         if not self.__pages:
