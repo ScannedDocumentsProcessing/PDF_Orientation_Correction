@@ -1,5 +1,4 @@
 import sys 
-import os
 from models.pdffile import PDFFile
 from services.tesseractorientationpredictor import TesseractOrientationPredictor
 from services.pdfplumberloader import PDFPlumberLoader
@@ -21,5 +20,5 @@ if __name__ == "__main__":
     pdf_corrector = PDFCorrector()
     corrected_pdf = pdf.to_corrected_pdf(pdf_corrector)
 
-    with open("data/output.pdf", "wb") as f:
-        f.write(corrected_pdf.read())
+    # with open("data/output.pdf", "wb") as f:
+    #     f.write(corrected_pdf.read())
