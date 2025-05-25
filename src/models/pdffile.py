@@ -30,7 +30,7 @@ class PDFFile:
                 images.append(Image(img))
             pages.append(Page(dpage['page_number'], dpage["rotation"], images))
         return PDFFile(pages)
-    
+
     @classmethod
     def ofBytes(cls, pdf_data: bytes, loader: PDFFileLoader):
         dict_pages = loader.processBytes(pdf_data)  # Pass bytes to the loader

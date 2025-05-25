@@ -7,6 +7,7 @@ from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.utils import ImageReader
 
+
 class PDFCorrector:
     """
     Class to correct orientation and skew in PDF files

@@ -33,4 +33,3 @@ class PDFPlumberLoader(PDFFileLoader):
 
     def processBytes(self, pdf_data: bytes):
         return self.process(BytesIO(pdf_data))
-        

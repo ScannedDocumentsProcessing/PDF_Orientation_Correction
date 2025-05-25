@@ -1,4 +1,4 @@
-import sys 
+import sys
 from models.pdffile import PDFFile
 from services.tesseractorientationpredictor import TesseractOrientationPredictor
 from services.pdfplumberloader import PDFPlumberLoader
