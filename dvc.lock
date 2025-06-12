@@ -1,0 +1,36 @@
+schema: '2.0'
+stages:
+  evaluate:
+    cmd: python src/evaluate.py data
+    deps:
+    - path: data
+      hash: md5
+      md5: f80cb8fd5e2247afe6ba9c475e5317b7.dir
+      size: 2463141
+      nfiles: 4
+    - path: src/evaluate.py
+      hash: md5
+      md5: e7eb7133f0934111f123913843f34f20
+      size: 3255
+    - path: src/predict.py
+      hash: md5
+      md5: 455704cfdabb4cd11a8fc324122eb776
+      size: 1766
+    - path: src/services
+      hash: md5
+      md5: afe092123492328c486bf18beab31823.dir
+      size: 14685
+      nfiles: 6
+    outs:
+    - path: evaluation/orientation_confusion_matrix.png
+      hash: md5
+      md5: cc55f2f67fa49d456ebed948f03304d5
+      size: 19921
+    - path: evaluation/performance_orientation.json
+      hash: md5
+      md5: 973774a912f3a1a3a247e221d3d0f830
+      size: 405
+    - path: evaluation/performance_skew_orientation.json
+      hash: md5
+      md5: e9c2015bace383c9995cee4c543b92a6
+      size: 44

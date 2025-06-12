@@ -1,0 +1,13 @@
+stages:
+  evaluate:
+    cmd: python src/evaluate.py data
+    deps:
+    - src/evaluate.py
+    - src/predict.py
+    - src/services
+    - data
+    metrics:
+    - evaluation/performance_orientation.json
+    - evaluation/performance_skew_orientation.json
+    plots:
+    - evaluation/orientation_confusion_matrix.png
